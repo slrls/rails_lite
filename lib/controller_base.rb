@@ -36,5 +36,10 @@ class ControllerBase
     content = ERB.new(File.read("views/#{directory}/#{file_name}")).result(binding)
     render_content(content, "text/html")
   end
+
+  def invoke_action(action)
+    send(action)
+    render(action) unless @response_built
+  end
 end
 
