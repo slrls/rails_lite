@@ -14,8 +14,8 @@ class ControllerBase
 
   def redirect_to(url)
     unless @response_built
-      @res.status = "302 FOUND"
-      @res.header = url
+      @res.status = 302
+      @res.header["location"] = url
       @response_built = true
     end
   end

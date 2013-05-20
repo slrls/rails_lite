@@ -6,17 +6,19 @@ trap('INT') { server.shutdown }
 
 class MyController < ControllerBase
   def go
-    if req.path = "/redirect"
-      redirect_to("www.google.com")
+    if @req.path == "/redirect"
+      redirect_to("http://www.google.com")
     else
-      req.path =~ /^\/render/
+      @req.path =~ /^\/render/
     end
   end
 end
 
 server.mount_proc '/' do |req, res|
-  res.content_type = "text/text"
-  res.body = req.path
+  MyController.new(req, res).go
+  # res.content_type =
+  # res.body = "hi"
+  # render_content(res.body, "text/text")
 end
 
 
