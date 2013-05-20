@@ -8,8 +8,8 @@ class MyController < ControllerBase
   def go
     if @req.path == "/redirect"
       redirect_to("http://www.google.com")
-    else
-      @req.path =~ /^\/render/
+    elsif @req.path =~ /^\/render/
+      render_content(@req.query['content'], "text/text")
     end
   end
 end
