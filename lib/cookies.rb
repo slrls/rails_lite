@@ -4,28 +4,27 @@ require 'webrick'
 class Session
   def initialize(req)
     @req = req
-    @cookie_present = @req.cookies.select do |cookie|
+    cookie_present = @req.cookies.select do |cookie|
       cookie.name == '_rails_lite_app'
     end.first
 
-    @submitted_cookie = WEBrick::Cookie.new('_rails_lite_app', {})
-    if @cookie_present
-      @submitted_cookie.value = JSON.parse(@cookie_present)
+    if cookie_present
+      @data = JSON.parse(cookie_present.value)
+    else
+      @data = {}
     end
   end
 
   def [](method)
-    self.send(method)
+    @data[method]
   end
 
   def []=(method,value)
-    self.send("#{method}=", value)
+    @data[method] = value
   end
 
   def store_session(res)
-    @new_cookie = WEBrick::Cookie.new('_rails_lite_app', @submitted_cookie.value.to_json)
-    # @new_cookie.name =
-    # @new_cookie.value =
+    @new_cookie = WEBrick::Cookie.new('_rails_lite_app', @data.to_json)
     res.cookies << @new_cookie
   end
 end
