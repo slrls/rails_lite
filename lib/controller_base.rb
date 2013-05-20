@@ -1,4 +1,5 @@
 require './cookies.rb'
+require 'active_support/core_ext'
 
 class ControllerBase
   def initialize(req, res)
@@ -29,5 +30,11 @@ class ControllerBase
     @session = Session.new(@req)
   end
 
+  def render(file_name)
+    binding
+    directory = "#{self.class.name.underscore}".gsub("_controller", "")
+    content = ERB.new(File.read("views/#{directory}/#{file_name}")).result(binding)
+    render_content(content, "text/html")
+  end
 end
 
